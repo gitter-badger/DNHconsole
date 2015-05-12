@@ -16,8 +16,8 @@ GioiHanThamSoTruyenTrangComment2=['f','l','b','']+mang1den10
 
 DNHconsolelib.help()
 commander=raw_input('\nEnter de mo trang chu!')
-DNHconsolelib.home()
-
+DNHconsolelib.updateDataHome()
+DNHconsolelib.showhome()
 
 commander=''
 while commander!='x':
@@ -35,15 +35,15 @@ while commander!='x':
 	try:
 		if commander in GioiHanThamSoTruyenTrangHome:
 			if commander =='m':
-				DNHconsolelib.home()
+				DNHconsolelib.showhome()
 				os.system('color '+str(raw_input('Go 1 trong cac so 1-9 de chon mau, hoac tu a den f: ')))
 				continue
 			if commander =='h':
-				DNHconsolelib.home()
+				DNHconsolelib.showhome()
 			elif commander =='i':
 				DNHconsolelib.help()
 			elif commander =='l':
-				DNHconsolelib.home()
+				DNHconsolelib.showhome()
 				DNHconsolelib.see(4)
 			elif commander=='x':
 				break
