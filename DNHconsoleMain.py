@@ -1,9 +1,10 @@
 import DNHconsolelib
+import os
 #Gioi Han Tham So Truyen Trang Home
 mang1den20=[]
 for  i in range(1,20):
 	mang1den20.append(str(i))
-GioiHanThamSoTruyenTrangHome=['i','l','c','h','x']+mang1den20
+GioiHanThamSoTruyenTrangHome=['m','i','l','c','h','x']+mang1den20
 #Gioi Han Tham So Truyen Trang Comment Khi Chon Trang
 GioiHanThamSoTruyenTrangComment1=['b']+mang1den20
 #Gioi Han Tham So Truyen Trang Comment Khi Chon STT Comment
@@ -19,6 +20,7 @@ DNHconsolelib.home()
 commander=''
 while commander!='x':
 	print """
+	Go m de doi mau chu(Chuc nang nay co the bi Antivirus Warning)
 	Go i de xem lai trang gioi thieu
 	Go l de mo trang moi nhat
 	Go cac so trong khoang 1-20 de xem cach trang tuong ung
@@ -30,6 +32,10 @@ while commander!='x':
 	#DUNG TRY de bo loi, khi DEBUG phai thay pass bang raise
 	try:
 		if commander in GioiHanThamSoTruyenTrangHome:
+			if commander =='m':
+				DNHconsolelib.home()
+				os.system('color '+str(raw_input('Go 1 trong cac so 1-9 de chon mau, hoac tu a den f: ')))
+				continue
 			if commander =='h':
 				DNHconsolelib.home()
 			elif commander =='i':
