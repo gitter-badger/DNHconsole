@@ -2,8 +2,8 @@
 
 * Đây là chương trình truy cập diễn đàn Daynhauhoc.com bằng giao diện dòng lệnh (console)
 * Được viết băng Python 2.9.7
-* Do Thành Phạm - @thanhmssl10 đặt những dòng code đầu tiên
-* Vào ngày: 11/5/2015
+* Thành Phạm - @thanhmssl10
+* 11/5/2015
 
 ##1.Sử dụng
 
