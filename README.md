@@ -10,13 +10,16 @@
 Download DNHconsole.exe tại đây, mở ra và làm theo hướng dẫn của chương trình
 
 ##2.Phát triển
+
 ###Hạn chế
 * Chỉ hiển thị được không dấu
 * Format khó theo dõi
 * Một số kí tự  convert từ tiếng việt có dấu sang không dấu thất bại.
 * Chữ của 1 từ khi xuống dòng hay bị tách nhau
 * Không có chức năng login, comment , đăng bài
+
 ###Ý tưởng phát triển thêm
+
 * Hiển thị tiếng việt có dấu
 * Hiển thị đúng chuẩn Markdown
 * Hỗ trợ đăng nhập đăng kí
