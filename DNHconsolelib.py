@@ -11,9 +11,12 @@ SoTopic=0
 IDTopicHomeRaw=[]
 #Mang chua link topic da convert sang link raw
 LinkTopicHomeRaw=[]
-#Mang chua CategoryID cua topic, amg nay di cung mang CategoryTextofID
-
-CategoryTextofID
+#Mang chua CategoryID cua topic, mamg nay di cung tu dien CategoryTextID
+CategoryID=[]
+CategoryTextID={'1':'Uncategorized','3':'Meta','5':'Videos','6':'Fun',\
+'7':'HackerNews','9':'Programming','20':'English','29':'Unix-Linux',\
+'34':'Windows','32':'Share','33':'Computer','31':'Writes','21':'Jobs',\
+'23':'Devchat'}
 
 #Trash
 lineData=[]
@@ -52,6 +55,7 @@ def LayIDtopic(link):
     DemSoKiTuCanCat=0
     for i in range(0,200):
         try:
+
             if link[ViTriCuaKiTuBatDau:][i].isdigit:
                 DemSoKiTuCanCat+=1
             else:
@@ -63,7 +67,7 @@ def LayIDtopic(link):
     return ID
 #Ham chuyen doi link thuong dung sang link raw de dang dang lay noi dung topic
 def linktoraw(link):
-    return domain+"/raw/" + str(LayIDtopic) 
+    return domain+"/raw/" + str(LayIDtopic(link)) 
 #Ham cho du lieu goc tu mot link bat ki
 def sourcetext(link):
     #Thoi gian thuc hien nhung cau lenh lay du lieu kha lau nen phai co WaitString
@@ -96,45 +100,69 @@ def updateDataHome():
     #Trich xuat du lieu cua moi topic, gan ID cho moi topic
     ##Duyet tung dong cua Phoi Du Lieu
     for i in range(0,PhoiDulieuTrangHomeDaTachDong.__len__()):
-    ##Trich xuat Ten topic
-    ###Dung ham lay chuoi de tach du lieu theo tung dong
+        ##Trich xuat Ten topic
+        ###Dung ham lay chuoi de tach du lieu theo tung dong
         if LayChuoi(PhoiDulieuTrangHomeDaTachDong[i],"<span itemprop='name'>","<") !="nothing":
             TenTopicHome.append(LayChuoi(PhoiDulieuTrangHomeDaTachDong[i],"<span itemprop='name'>","<"))
-        #Trich xuat so topic
+        ##Trich xuat so topic
         if (i==PhoiDulieuTrangHomeDaTachDong.__len__()-1):
-            SoTopic=TenTopicHome.__len__()
-        #Trich xuat ID topic
+            global SoTopic
+            SoTopic=TenTopicHome.__len__() 
+        ##Trich xuat ID topic
         if LayChuoi(PhoiDulieuTrangHomeDaTachDong[i],"<meta itemprop='url' content='","'") !="nothing":
             IDTopicHomeRaw.append(LayIDtopic(LayChuoi(PhoiDulieuTrangHomeDaTachDong[i],"<meta itemprop='url' content='","'")))       
-        #Trich xuat link raw topic
+        ##Trich xuat Link toptic (sau do tach ra Link raw)
         if LayChuoi(PhoiDulieuTrangHomeDaTachDong[i],"<meta itemprop='url' content='","'") !="nothing":
             LinkTopicHomeRaw.append(linktoraw(LayChuoi(PhoiDulieuTrangHomeDaTachDong[i],"<meta itemprop='url' content='","'")))
+    
+    ##Duyet lai tung dong cua Phoi Du Lieu de trich xuat cac du lieu con lai
+    for i in range(0,PhoiDulieuTrangHomeDaTachDong.__len__()):
         ##Trich xuat Category
+        for STT in range(0,SoTopic):
+            ###Tim kiem theo ID cua topic
+            ChuoiDinhViChuaIDTopic='"id":'+IDTopicHomeRaw[STT]+',"title"'
+            if '"id":'+IDTopicHomeRaw[STT]+',"title"'in PhoiDulieuTrangHomeDaTachDong[i]:
+                ###Thu hep Vung Tim Kiem
+                VungTimKiemCategory=PhoiDulieuTrangHomeDaTachDong[i][PhoiDulieuTrangHomeDaTachDong[i].find(ChuoiDinhViChuaIDTopic):]
+                if "category_id" in VungTimKiemCategory:
+                    ViTriChuoiTimCategory=VungTimKiemCategory.find("category_id")
+                    VungTimKiemCategory=VungTimKiemCategory[ViTriChuoiTimCategory+len("category_id")+2:ViTriChuoiTimCategory+len("category_id")+2+6]
+                    CategoryIDofThisPage=""
+                    GioiHanSoKiTuCuaID=0
+                    while VungTimKiemCategory[0:1].isdigit() and GioiHanSoKiTuCuaID<5:
+                        GioiHanSoKiTuCuaID+=1
+                        CategoryIDofThisPage+=VungTimKiemCategory[0:1]
+                        VungTimKiemCategory=VungTimKiemCategory[1:]
+                    CategoryID.append(CategoryIDofThisPage)
+
+
 
         ##Trich xuat Users(user tham gia thao luan topic do)
         ##Trich xuat Replies (So comment)
         ##Trich xuat Views(So luot View)
-        ##Trich xuat Link toptic (sau do tach ra Link raw)
-    for i in range(0,PhoiDulieuTrangHomeDaTachDong.__len__()):
-        if IDTopicHomeRaw[0] in PhoiDulieuTrangHomeDaTachDong[i]:
-            if "category_id" in PhoiDulieuTrangHomeDaTachDong[i][PhoiDulieuTrangHomeDaTachDong[i].find(IDTopicHomeRaw[0]):]:
-                print PhoiDulieuTrangHomeDaTachDong[i][PhoiDulieuTrangHomeDaTachDong[i].find("category_id")+len("category_id")+2:PhoiDulieuTrangHomeDaTachDong[i].find("category_id")+len("category_id")+3]
-    
 
     #luu vao tempHome.txt
     # fileTempHome=open('tempHome.txt','w')
     # fileTempHome.write(sourcetext(domain))
     # fileTempHome.close()
     #Load tung dong du lieu tu temp.txt ra de xu li theo tung dong
-    return IDTopicHomeRaw[0]
 
 #Cap nhat toan bo du lieu cua cac topic, danh cho ket noi tot
 def updateFullDataHome():
-    PhoiDuLieuHomeChuaTachDong=sourcetext(domain)
+    print SoTopic
 
 #2.Show du lieu: In Danh sach Topic, In Topic, In Commment, ... 
 # ===============================================================
 #Ham show ra danh sach topic moi nhat tren trang chu 
+def showhome():
+    if True:
+        STTTopic=0
+        for i in range(0,SoTopic):
+            STTTopic = STTTopic+1
+            if STTTopic <10:
+                print "\n[0"+str(STTTopic)+"]: "+ str(TenTopicHome[i]) +" ["+CategoryTextID[CategoryID[i]]+"]"
+            else:
+                print "\n["+str(STTTopic)+"]: "+ str(TenTopicHome[i])  +" ["+CategoryTextID[CategoryID[i]]+"]"
 def home():
     TempHome=open('tempHome.txt','w')
     TempHome.write(sourcetext(domain))
@@ -166,7 +194,7 @@ def home():
 #Ham show ra noi dung topic, an enter de chuyen
 def see(ID):
     if LinkTrangHome[ID]=="":
-        home()
+        updateDataHome()
     print WaitString
     import urllib2
     web = urllib2.urlopen(LinkTrangHome[ID])
@@ -219,7 +247,7 @@ def showall(link):
 def seecomment(ID,STT):
     if str(LinkTrangHome[int(ID)])=='':
         print "Link Trang Home bi trong"
-        home()
+        updateDataHome()
     link=LinkTrangHome[int(ID)]+"/"+str(STT)
     
 
