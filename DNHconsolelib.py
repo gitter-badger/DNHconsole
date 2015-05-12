@@ -17,7 +17,40 @@ for i in range(0,50):
 def see(ID):
     if LinkTrangHome[ID]=="":
         home()
-    show(LinkTrangHome[ID],ID)
+    print WaitString
+    import urllib2
+    web = urllib2.urlopen(LinkTrangHome[ID])
+    tep=open('tempDNHpage.txt',"w")
+    tep.write(web.read())
+    tep.close()
+   
+    import unicodedata
+    input = open('tempDNHpage.txt').read().decode('UTF-8')
+    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
+
+    tep=open('tempDNHpage.txt',"w")
+    tep.write(output)
+    tep.close()
+    tep=open('tempDNHpage.txt',"r")
+    
+    print "\n\n\n"
+    print "===================================================="
+    print "===================================================="
+    print "===================================================="
+    print "\n\n\n"
+    print "  "+"["+str(ID)+"]:"+TenBaiVietGlobal[ID]
+    print "\n"
+    for i in range(0,GioiHanDong):
+        textline=tep.readline()
+        if textline!="":
+            print textline
+            raw_input()
+    print "\n\n\n"
+    print "====================================================" 
+    print "===================================================="
+    print "====================================================" 
+    print "\n\n\n"
+    tep.close()
 def showall(link):
     print "\n\n\n"
     print "===================================================="
@@ -62,43 +95,6 @@ def seecomment(ID,STT):
     print "===================================================="
     print "\n\n\n"
     print "  Comment["+str(STT)+"]:"+"["+str(ID)+"]"+":"+TenBaiVietGlobal[int(ID)]
-    print "\n"
-    for i in range(0,GioiHanDong):
-        textline=tep.readline()
-        if textline!="":
-            print textline
-            raw_input()
-    print "\n\n\n"
-    print "====================================================" 
-    print "===================================================="
-    print "====================================================" 
-    print "\n\n\n"
-    tep.close()
-def show(link,ID):
-    print WaitString
-    
-    import urllib2
-    web = urllib2.urlopen(link)
-    tep=open('tempDNHpage.txt',"w")
-    tep.write(web.read())
-    tep.close()
-   
-    import unicodedata
-    input = open('tempDNHpage.txt').read().decode('UTF-8')
-    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
-
-    tep=open('tempDNHpage.txt',"w")
-    tep.write(output)
-    tep.close()
- 
-    tep=open('tempDNHpage.txt',"r")
-    
-    print "\n\n\n"
-    print "===================================================="
-    print "===================================================="
-    print "===================================================="
-    print "\n\n\n"
-    print "  "+"["+str(ID)+"]:"+TenBaiVietGlobal[ID]
     print "\n"
     for i in range(0,GioiHanDong):
         textline=tep.readline()
