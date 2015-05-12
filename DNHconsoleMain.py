@@ -17,6 +17,8 @@ GioiHanThamSoTruyenTrangComment2=['f','l','b','']+mang1den10
 DNHconsolelib.help()
 commander=raw_input('\nEnter de mo trang chu!')
 DNHconsolelib.home()
+
+
 commander=''
 while commander!='x':
 	print """
