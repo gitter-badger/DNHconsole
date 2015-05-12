@@ -1,8 +1,9 @@
-#Ham chuyen tu co dau sang khong dau UTF-8
 #Date first code: 2015/5/11
 #Tac gia: Thanh Pham - @thanhmssl10 - DNH
-#Input la link raw cua Daynhauhoc.com, Output la text da duoc bo dau
+#DNHconsole module - Truy cap Daynhauhoc.com qua giao dien console
 
+
+#1.Lay thong tin cua cac topic nhu: Ten topic, link thuong dung, so comment, user tham gia thao luan, so view, thoi gian active lan cuoi,...
 domain='http://daynhauhoc.com'
 GioiHanDong=999
 WaitString="\nCho chut nhe :D ......"
@@ -17,7 +18,6 @@ def see(ID):
     if LinkTrangHome[ID]=="":
         home()
     show(LinkTrangHome[ID],ID)
-    
 def showall(link):
     print "\n\n\n"
     print "===================================================="
@@ -31,6 +31,49 @@ def showall(link):
     print "===================================================="
     print "====================================================" 
     print "\n\n\n"
+def seecomment(ID,STT):
+    if str(LinkTrangHome[int(ID)])=='':
+        print "Link Trang Home bi trong"
+        home()
+    link=LinkTrangHome[int(ID)]+"/"+str(STT)
+    
+
+    print WaitString
+    
+    import urllib2
+    web = urllib2.urlopen(link)
+    tep=open('tempDNHpage.txt',"w")
+    tep.write(web.read())
+    tep.close()
+   
+    import unicodedata
+    input = open('tempDNHpage.txt').read().decode('UTF-8')
+    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
+
+    tep=open('tempDNHpage.txt',"w")
+    tep.write(output)
+    tep.close()
+ 
+    tep=open('tempDNHpage.txt',"r")
+    
+    print "\n\n\n"
+    print "===================================================="
+    print "===================================================="
+    print "===================================================="
+    print "\n\n\n"
+    print "  Comment["+str(STT)+"]:"+"["+str(ID)+"]"+":"+TenBaiVietGlobal[int(ID)]
+    print "\n"
+    for i in range(0,GioiHanDong):
+        textline=tep.readline()
+        if textline!="":
+            print textline
+            raw_input()
+    print "\n\n\n"
+    print "====================================================" 
+    print "===================================================="
+    print "====================================================" 
+    print "\n\n\n"
+    tep.close()
 def show(link,ID):
     print WaitString
     
@@ -57,9 +100,10 @@ def show(link,ID):
     print "\n\n\n"
     print "  "+"["+str(ID)+"]:"+TenBaiVietGlobal[ID]
     print "\n"
-    for i in range(1,GioiHanDong):
-        if tep.readline()!="":
-            print tep.readline()
+    for i in range(0,GioiHanDong):
+        textline=tep.readline()
+        if textline!="":
+            print textline
             raw_input()
     print "\n\n\n"
     print "====================================================" 
