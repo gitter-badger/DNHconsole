@@ -3,6 +3,8 @@
 #DNHconsole module - Truy cap Daynhauhoc.com qua giao dien console
 
 domain='http://daynhauhoc.com'
+#Thoi gian thuc hien nhung cau lenh lay du lieu kha lau nen phai co WaitString
+WaitString="\nCho chut nhe :D ......"
 GioiHanDong=999
 #Mang chua du lieu cua cac Topic
 TenTopicHome=[]
@@ -18,13 +20,6 @@ CategoryTextID={'1':'Uncategorized','3':'Meta','5':'Videos','6':'Fun',\
 '34':'Windows','32':'Share','33':'Computer','31':'Writes','21':'Jobs',\
 '23':'Devchat'}
 
-#Trash
-lineData=[]
-TenBaiVietGlobal=[]
-LinkTrangHome=[]
-for i in range(0,50):       
-        LinkTrangHome.append("")
-        TenBaiVietGlobal.append("")
 
 #In nhung dong dau tien ma user nhin thay
 def help():
@@ -70,8 +65,7 @@ def linktoraw(link):
     return domain+"/raw/" + str(LayIDtopic(link)) 
 #Ham cho du lieu goc tu mot link bat ki
 def sourcetext(link):
-    #Thoi gian thuc hien nhung cau lenh lay du lieu kha lau nen phai co WaitString
-    WaitString="\nCho chut nhe :D ......"
+
     print WaitString
 
     #Luu du lieu web vao mot phai temp
@@ -157,47 +151,31 @@ def updateFullDataHome():
 def showhome():
     if True:
         STTTopic=0
-        for i in range(0,SoTopic):
+        for i in range(0,SoTopic//2):
             STTTopic = STTTopic+1
             if STTTopic <10:
                 print "\n[0"+str(STTTopic)+"]: "+ str(TenTopicHome[i]) +" ["+CategoryTextID[CategoryID[i]]+"]"
             else:
                 print "\n["+str(STTTopic)+"]: "+ str(TenTopicHome[i])  +" ["+CategoryTextID[CategoryID[i]]+"]"
-def home():
-    TempHome=open('tempHome.txt','w')
-    TempHome.write(sourcetext(domain))
-    TempHome.close()
-    
-    TempHome=open('tempHome.txt','r')
-    lineData=[]
-    for i in range(0,GioiHanDong+1):
-        lineData.append(TempHome.readline())
-    
-    STTTopic=0
-    for i in range(0,GioiHanDong):
-        TenBaiViet=LayChuoi(lineData[i],"<span itemprop='name'>","<")
-        if (TenBaiViet!=-1) and (STTTopic < 20):
+        print "\n\n\n  Enter de xem tiep!!!"
+        raw_input()   
+        for i in range(SoTopic//2,SoTopic):
             STTTopic = STTTopic+1
             if STTTopic <10:
-                print "\n[0"+str(STTTopic)+"]: "+ str(TenBaiViet)
-                
+                print "\n[0"+str(STTTopic)+"]: "+ str(TenTopicHome[i]) +" ["+CategoryTextID[CategoryID[i]]+"]"
             else:
-                print "\n["+str(STTTopic)+"]: "+ str(TenBaiViet)
-            TenBaiVietGlobal[STTTopic]=TenBaiViet
+                print "\n["+str(STTTopic)+"]: "+ str(TenTopicHome[i])  +" ["+CategoryTextID[CategoryID[i]]+"]"
 
-    STTLink=0
-    for i in range(0,GioiHanDong):
-        LinkBaiViet=LayChuoi(lineData[i],"<meta itemprop='url' content='","'")
-        if (LinkBaiViet!=-1) and (STTLink < 20):
-            STTLink= STTLink+1
-            LinkTrangHome[STTLink]=linktoraw(LinkBaiViet)
+   
+
+
 #Ham show ra noi dung topic, an enter de chuyen
 def see(ID):
-    if LinkTrangHome[ID]=="":
+    if LinkTopicHomeRaw[ID]=="":
         updateDataHome()
     print WaitString
     import urllib2
-    web = urllib2.urlopen(LinkTrangHome[ID])
+    web = urllib2.urlopen(LinkTopicHomeRaw[ID])
     tep=open('tempDNHpage.txt',"w")
     tep.write(web.read())
     tep.close()
@@ -216,7 +194,7 @@ def see(ID):
     print "===================================================="
     print "===================================================="
     print "\n\n\n"
-    print "  "+"["+str(ID)+"]:"+TenBaiVietGlobal[ID]
+    print "  "+"["+str(ID)+"]:"+TenTopicHome[ID]
     print "\n"
     for i in range(0,GioiHanDong):
         textline=tep.readline()
@@ -245,10 +223,10 @@ def showall(link):
     print "\n\n\n"
 #Ham show ra noi dung comment thu STT cua topic co ma so la ID
 def seecomment(ID,STT):
-    if str(LinkTrangHome[int(ID)])=='':
+    if str(LinkTopicHomeRaw[int(ID)])=='':
         print "Link Trang Home bi trong"
         updateDataHome()
-    link=LinkTrangHome[int(ID)]+"/"+str(STT)
+    link=LinkTopicHomeRaw[int(ID)]+"/"+str(STT)
     
 
     print WaitString
@@ -274,7 +252,7 @@ def seecomment(ID,STT):
     print "===================================================="
     print "===================================================="
     print "\n\n\n"
-    print "  Comment["+str(STT)+"]:"+"["+str(ID)+"]"+":"+TenBaiVietGlobal[int(ID)]
+    print "  Comment["+str(STT)+"]:"+"["+str(ID)+"]"+":"+TenTopicHome[int(ID)]
     print "\n"
     for i in range(0,GioiHanDong):
         textline=tep.readline()
