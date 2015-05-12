@@ -15,15 +15,15 @@ GioiHanThamSoTruyenTrangComment2=['f','l','b','']+mang1den10
 
 
 DNHconsolelib.help()
-commander=raw_input('\nEnter de ve trang chu!')
+commander=raw_input('\nEnter de mo trang chu!')
 DNHconsolelib.home()
 commander=''
 while commander!='x':
 	print """
 	Go m de doi mau chu(Chuc nang nay co the bi Antivirus Warning)
 	Go i de xem lai trang gioi thieu
-	Go l de mo trang moi nhat
-	Go cac so trong khoang 1-20 de xem cach trang tuong ung
+	Go l de mo topic moi nhat
+	Go cac so trong khoang 1-20 de xem cac topic tuong ung
 	Go c de xem comment
 	Go h de ve trang chu
 	Go x de thoat

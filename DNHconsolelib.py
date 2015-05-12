@@ -1,18 +1,83 @@
 #Date first code: 2015/5/11
-#Tac gia: Thanh Pham - @thanhmssl10 - DNH
+#Thanh Pham - @thanhmssl10 - DNH
 #DNHconsole module - Truy cap Daynhauhoc.com qua giao dien console
 
-
-#1.Lay thong tin cua cac topic nhu: Ten topic, link thuong dung, so comment, user tham gia thao luan, so view, thoi gian active lan cuoi,...
 domain='http://daynhauhoc.com'
 GioiHanDong=999
+#Thoi gian thuc hien nhung cau lenh lay du lieu kha lau nen phai co WaitString
 WaitString="\nCho chut nhe :D ......"
-
+#Cac mang chua Ten topic va link raw
 LinkTrangHome=[]
 TenBaiVietGlobal=[]
 for i in range(0,50):       
         LinkTrangHome.append("")
         TenBaiVietGlobal.append("")
+
+
+def help():
+    print """
+
+    #Gioi thieu chung cac chuc nang cua DNHconsole
+
+     """
+#1.Lay du lieu cua cac topic nhu: Ten topic, link thuong dung, so comment, user tham gia thao luan, so view, thoi gian active lan cuoi,...
+#Ham ho tro viec boc tach du lieu                   
+def LayChuoi(DayGoc,DayDinhVi,KiTuKetThuc):
+
+    ViTriCuaDayDinhVi=DayGoc.find(DayDinhVi)
+    ViTriCuaKiTuKetThuc=0
+    if ViTriCuaDayDinhVi>0:
+        ViTriCuaKiTuKetThuc=DayGoc.find(KiTuKetThuc,(ViTriCuaDayDinhVi+len(DayDinhVi)))
+
+    DayOutput=""
+    if ViTriCuaKiTuKetThuc>0:
+        DayOutput=DayGoc[(ViTriCuaDayDinhVi+len(DayDinhVi)):ViTriCuaKiTuKetThuc]
+
+
+    if DayOutput != "":
+        return DayOutput
+    else:
+        return -1
+#Ham chuyen doi link thuong dung sang link raw de dang dang lay noi dung topic
+def linktoraw(link):
+    ViTriCuaKiTuBatDau=link.find("/",len(domain)+5)
+
+    DemSoKiTuCanCat=0
+    for i in range(0,200):
+        try:
+            if link[ViTriCuaKiTuBatDau:][i].isdigit:
+                DemSoKiTuCanCat+=1
+            else:
+                break
+        except:
+            break
+            pass
+        
+        
+    linkRaw=link[ViTriCuaKiTuBatDau+1:ViTriCuaKiTuBatDau+DemSoKiTuCanCat]
+    return domain+"/raw/" + str(linkRaw) 
+#Ham cho du lieu goc tu mot link bat ki
+def sourcetext(link):
+    print WaitString
+
+    #Luu du lieu web vao mot phai temp
+    import urllib2
+    web = urllib2.urlopen(link)
+    tep=open('tempDNHpage.txt',"w")
+    tep.write(web.read())
+    tep.close()
+   
+    #Chuyen doi chu co dau thanh khong dau de cmd hien thi de dang
+    import unicodedata
+    input = open('tempDNHpage.txt').read().decode('UTF-8')
+    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
+
+    #Ghi lai du lieu da chuyen doi vao file temp
+    tep=open('tempDNHpage.txt',"w")
+    tep.write(output)
+    tep.close()
+    return output
+#2.Show du lieu: In Danh sach Topic, In Topic, OIn Commment, ... 
 
 def see(ID):
     if LinkTrangHome[ID]=="":
@@ -107,24 +172,6 @@ def seecomment(ID,STT):
     print "====================================================" 
     print "\n\n\n"
     tep.close()
-def sourcetext(link):
-    print WaitString
-    
-    import urllib2
-    web = urllib2.urlopen(link)
-    tep=open('tempDNHpage.txt',"w")
-    tep.write(web.read())
-    tep.close()
-   
-    import unicodedata
-    input = open('tempDNHpage.txt').read().decode('UTF-8')
-    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
-
-    tep=open('tempDNHpage.txt',"w")
-    tep.write(output)
-    tep.close()
-    return output
-
 def home():
     TempHome=open('tempHome.txt','w')
     TempHome.write(sourcetext(domain))
@@ -156,130 +203,5 @@ def home():
         if (LinkBaiViet!=-1) and (STTLink < 20):
             STTLink= STTLink+1
             LinkTrangHome[STTLink]=linktoraw(LinkBaiViet)
-               
-                
-def linktoraw(link):
-    ViTriCuaKiTuBatDau=link.find("/",len(domain)+5)
-
-    DemSoKiTuCanCat=0
-    for i in range(0,200):
-        try:
-            if link[ViTriCuaKiTuBatDau:][i].isdigit:
-                DemSoKiTuCanCat+=1
-            else:
-                break
-        except:
-            break
-            pass
-        
-        
-    linkRaw=link[ViTriCuaKiTuBatDau+1:ViTriCuaKiTuBatDau+DemSoKiTuCanCat]
-    return domain+"/raw/" + str(linkRaw)
-    
-def LayChuoi(DayGoc,DayDinhVi,KiTuKetThuc):
-
-    ViTriCuaDayDinhVi=DayGoc.find(DayDinhVi)
-    ViTriCuaKiTuKetThuc=0
-    if ViTriCuaDayDinhVi>0:
-        ViTriCuaKiTuKetThuc=DayGoc.find(KiTuKetThuc,(ViTriCuaDayDinhVi+len(DayDinhVi)))
-
-    DayOutput=""
-    if ViTriCuaKiTuKetThuc>0:
-        DayOutput=DayGoc[(ViTriCuaDayDinhVi+len(DayDinhVi)):ViTriCuaKiTuKetThuc]
 
 
-    if DayOutput != "":
-        return DayOutput
-    else:
-        return -1
-def help():
-    print """
-
-
-
-
-
-
-    #Gioi thieu chung cac chuc nang cua DNHconsole
-
-    Day la module truy cap dien dan Daynhauhoc.com qua giao dien dong lenh
-    (console) duoc viet bang Python 2.7.9 do Thanh Pham - @thanhmssl10 dat
-    nhung dong code dau tien vao ngay 11/5/2015.
-
-    ##Moudule co cac ham chinh nhu sau:
-
-    ###2 Ham User su dung nhieu nhat    
-    home():Ham nay khong co tham so, dung de xem cac bai viet moi nhat
-    --------------------------------------------------------------------
-    see(ID):   Co 1 tham so truyen vao la so tu 1 den 20
-    --------------------------------------------------------------------
-
-
-    ###Cac ham mo rong    
-    show():    Co 2 tham so truyen vao la Link cua trang can xem va ID cua no
-    vidu:      show('http://daynhauhoc.com/raw/7127',1)
-
-    Ham nay in ra tren man hinh noi dung cua trang web va chuyen dong khi an
-    Enter
-    --------------------------------------------------------------------
-
-
-    showall():  Co 1 tham so truyen vao la Link cua trang can xem
-    vidu:       show('http://daynhauhoc.com/raw/7127',1)
-    ...
-    Ham day se in toan bo noi dung cua trang web ra cung luc
-    --------------------------------------------------------------------
-    
-
-
-
-
-
-    Enter de doc tiep...
-    """
-    raw_input()
-    print """
-
-
-
-
-
-
-    #Gioi thieu chung cac chuc nang cua DNHconsole
-
-    Ngoai nhung ham do ra thi module con co mot ho ham khac de phuc vu cho
-    viec trich xuat du lieu tu website.
-
-    Cac ham do la nhung ham tim, cat chuoi, nhung ham de chuyen tu link thuong
-    sang link raw
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-
-    
-    """
