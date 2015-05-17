@@ -1,6 +1,9 @@
 # Date first code: 2015/5/11
 # Thanh Pham - @thanhmssl10 - DNH
 # DNHconsole module - Truy cap Daynhauhoc.com qua giao dien console
+import os
+import msvcrt
+
 
 domain = 'http://daynhauhoc.com'
 # Thoi gian thuc hien nhung cau lenh lay du lieu kha lau nen phai co WaitString
@@ -12,7 +15,7 @@ TenTopicHome = []
 # So Topic da lay duoc, thuong la 30 topic
 SoTopic = 0
 # So luong comment cua cac Topic
-NumCommentTopicHome = []
+NumTopic = []
 # Manrg chua ID topic o trang home
 IDTopicHomeRaw = []
 # Mang chua link topic da convert sang link raw
@@ -20,67 +23,81 @@ LinkTopicHomeRaw = []
 # Mang chua CategoryID cua topic, mamg nay di cung tu dien CategoryTextID
 CategoryID = []
 CategoryTextID = {'1': 'Uncategorized', '3': 'Meta', '5': 'Videos', '6': 'Fun',
-                  '7': 'HackerNews', '9': 'Programming', '20': 'English', '29': 'Unix-Linux',
-                  '34': 'Windows', '32': 'Share', '33': 'Computer', '31': 'Writes', '21': 'Jobs',
+                  '7': 'HackerNews', '9': 'Programming', '20': 'English',
+                  '29': 'Unix-Linux', '34': 'Windows', '32': 'Share',
+                  '33': 'Computer', '31': 'Writes', '21': 'Jobs',
                   '23': 'Devchat'}
 
 
 # In nhung dong dau tien ma user nhin thay
+def clear_screen():
+    os.system('cls')
+
+
+def flush_input():
+    while msvcrt.kbhit():
+        msvcrt.getch()
+
+
 def help():
+    clear_screen()
     print """
 
     #Gioi thieu chung cac chuc nang cua DNHconsole """
+
+
 # 1.Lay du lieu cua cac topic nhu: Ten topic, link thuong dung,
 # so comment, user tham gia thao luan, so view, thoi gian active
 # lan cuoi,...
 # ===============================================================
+
+
 # Ham ho tro viec boc tach du lieu
+# Ham tach du lieu ra khoi mot chuoi co day dinh vi la ki tu ket thuc
+def laychuoi(daygoc, daydinhvi, kituketthuc):
 
-def LayChuoi(DayGoc, DayDinhVi, KiTuKetThuc):
+    vi_tri_day_dinh_vi = daygoc.find(daydinhvi)
+    vi_tri_cua_ki_tu_ket_thuc = 0
+    if vi_tri_day_dinh_vi > 0:
+        vi_tri_cua_ki_tu_ket_thuc = daygoc.find(
+            kituketthuc, (vi_tri_day_dinh_vi + len(daydinhvi)))
 
-    ViTriCuaDayDinhVi = DayGoc.find(DayDinhVi)
-    ViTriCuaKiTuKetThuc = 0
-    if ViTriCuaDayDinhVi > 0:
-        ViTriCuaKiTuKetThuc = DayGoc.find(
-            KiTuKetThuc, (ViTriCuaDayDinhVi+len(DayDinhVi)))
+    dayoutput = ""
+    if vi_tri_cua_ki_tu_ket_thuc > 0:
+        dayoutput = daygoc[
+            (vi_tri_day_dinh_vi + len(daydinhvi)):vi_tri_cua_ki_tu_ket_thuc]
 
-    DayOutput = ""
-    if ViTriCuaKiTuKetThuc > 0:
-        DayOutput = DayGoc[
-            (ViTriCuaDayDinhVi+len(DayDinhVi)):ViTriCuaKiTuKetThuc]
-
-    if DayOutput != "":
-        return DayOutput
+    if dayoutput != "":
+        return dayoutput
     else:
+        # Khong tach duoc thi xuat "nothing"
         return "nothing"
+
+
 # Ham lay ID cua topic, ho tro cho ham linktoraw
-
-
-def LayIDtopic(link):
-    ViTriCuaKiTuBatDau = link.find("/", len(domain)+5)
-    DemSoKiTuCanCat = 0
+def lay_id_topic(link):
+    vi_tri_ki_tu_bat_dau = link.find("/", len(domain) + 5)
+    dem_so_ki_tu_can_cat = 0
     for i in range(0, 200):
         try:
 
-            if link[ViTriCuaKiTuBatDau:][i].isdigit:
-                DemSoKiTuCanCat += 1
+            if link[vi_tri_ki_tu_bat_dau:][i].isdigit:
+                dem_so_ki_tu_can_cat += 1
             else:
                 break
         except:
             break
-            pass
-    ID = link[ViTriCuaKiTuBatDau + 1:ViTriCuaKiTuBatDau + DemSoKiTuCanCat]
-    return ID
+    return link[vi_tri_ki_tu_bat_dau + 1:
+                vi_tri_ki_tu_bat_dau + dem_so_ki_tu_can_cat]
+
+
 # Ham chuyen doi link thuong dung sang link raw de dang dang lay noi dung topic
-
-
 def linktoraw(link):
-    return domain + "/raw/" + str(LayIDtopic(link))
+    return domain + "/raw/" + str(lay_id_topic(link))
+
+
 # Ham cho du lieu goc tu mot link bat ki
-
-
 def sourcetext(link):
-
     print WaitString
 
     # Luu du lieu web vao mot phai temp
@@ -101,110 +118,107 @@ def sourcetext(link):
     tep.close()
     return output
 
+
 # Cap nhat mot so thong tin cua cac topic
-
-
-def updateDataHome():
+def update_data_home():
     # Dung sourcetext de lay du lieu tu trang chu
     # Tach dong tu du lieu cua sourcetext dua vao mang
-    PhoiDulieuTrangHomeDaTachDong = sourcetext(domain).splitlines()
+    source_linebyline = sourcetext(domain).splitlines()
     # Trich xuat du lieu cua moi topic, gan ID cho moi topic
     # Duyet tung dong cua Phoi Du Lieu
-    for i in range(0, PhoiDulieuTrangHomeDaTachDong.__len__()):
+    for i in range(0, source_linebyline.__len__()):
         # Trich xuat Ten topic
+
         # Dung ham lay chuoi de tach du lieu theo tung dong
-        if LayChuoi(PhoiDulieuTrangHomeDaTachDong[i], "<span itemprop='name'>", "<") != "nothing":
-            TenTopicHome.append(LayChuoi(PhoiDulieuTrangHomeDaTachDong[i], "<span itemprop='name'>", "<"))
+        if laychuoi(source_linebyline[i],
+                    "<span itemprop='name'>", "<") != "nothing":
+            TenTopicHome.append(
+                laychuoi(source_linebyline[i], "<span itemprop='name'>", "<"))
+
         # Trich xuat so topic
-        if (i == PhoiDulieuTrangHomeDaTachDong.__len__() - 1):
+        if (i == source_linebyline.__len__() - 1):
             global SoTopic
             SoTopic = TenTopicHome.__len__()
+
         # Trich xuat ID topic
-        if LayChuoi(PhoiDulieuTrangHomeDaTachDong[i], "<meta itemprop='url' content='", "'") != "nothing":
-            IDTopicHomeRaw.append(LayIDtopic(LayChuoi(
-                PhoiDulieuTrangHomeDaTachDong[i], "<meta itemprop='url' content='", "'")))
+        if laychuoi(source_linebyline[i],
+                    "<meta itemprop='url' content='", "'") != "nothing":
+            IDTopicHomeRaw.append(lay_id_topic(laychuoi(
+                source_linebyline[i], "<meta itemprop='url' content='", "'")))
+
         # Trich xuat Link toptic (sau do tach ra Link raw)
-        if LayChuoi(PhoiDulieuTrangHomeDaTachDong[i], "<meta itemprop='url' content='", "'") != "nothing":
-            LinkTopicHomeRaw.append(linktoraw(LayChuoi(
-                PhoiDulieuTrangHomeDaTachDong[i], "<meta itemprop='url' content='", "'")))
+        if laychuoi(source_linebyline[i],
+                    "<meta itemprop='url' content='", "'") != "nothing":
+            LinkTopicHomeRaw.append(linktoraw(laychuoi(
+                source_linebyline[i], "<meta itemprop='url' content='", "'")))
+
     # Duyet lai tung dong cua Phoi Du Lieu de trich xuat cac du lieu con lai
-    for i in range(0, PhoiDulieuTrangHomeDaTachDong.__len__()):
+    for i in range(0, source_linebyline.__len__()):
+
         # Trich xuat Category
         for STT in range(0, SoTopic):
+
             # Tim kiem theo ID cua topic
-            ChuoiDinhViChuaIDTopic = '"id":'+IDTopicHomeRaw[STT]+',"title"'
-            if '"id":'+IDTopicHomeRaw[STT]+',"title"'in PhoiDulieuTrangHomeDaTachDong[i]:
+            day_dinh_vi_idtopic = '"id":' + IDTopicHomeRaw[STT] + ',"title"'
+            if '"id":' + IDTopicHomeRaw[STT]\
+                       + ',"title"' in source_linebyline[i]:
+
                 # Thu hep Vung Tim Kiem
-                VungTimKiemCategory = PhoiDulieuTrangHomeDaTachDong[i][
-                    PhoiDulieuTrangHomeDaTachDong[i].find(ChuoiDinhViChuaIDTopic):]
-                if "category_id" in VungTimKiemCategory:
-                    ViTriChuoiTimCategory = VungTimKiemCategory.find(
+                vung_tim_kiem_category = source_linebyline[i][
+                    source_linebyline[i].find(day_dinh_vi_idtopic):]
+
+                if "category_id" in vung_tim_kiem_category:
+                    vi_tri_dinh_vi_category = vung_tim_kiem_category.find(
                         "category_id")
-                    VungTimKiemCategory = VungTimKiemCategory[
-                        ViTriChuoiTimCategory+len("category_id")+2:ViTriChuoiTimCategory+len("category_id")+2+6]
-                    CategoryIDofThisPage = ""
-                    GioiHanSoKiTuCuaID = 0
-                    while VungTimKiemCategory[0:1].isdigit() and GioiHanSoKiTuCuaID < 5:
-                        GioiHanSoKiTuCuaID += 1
-                        CategoryIDofThisPage += VungTimKiemCategory[0:1]
-                        VungTimKiemCategory = VungTimKiemCategory[1:]
-                    CategoryID.append(CategoryIDofThisPage)
+                    vung_tim_kiem_category = vung_tim_kiem_category[
+                        vi_tri_dinh_vi_category + len("category_id") + 2:
+                        vi_tri_dinh_vi_category + len("category_id") + 2 + 6
+                    ]
+
+                    category_id = ""
+                    gioi_han_so_ki_tu_id = 0
+                    while vung_tim_kiem_category[0:1].isdigit() and \
+                            gioi_han_so_ki_tu_id < 5:
+                        gioi_han_so_ki_tu_id += 1
+                        category_id += vung_tim_kiem_category[0:1]
+                        vung_tim_kiem_category = vung_tim_kiem_category[1:]
+
+                    CategoryID.append(category_id)
+
         # Trich xuat Replies (So comment)
-        if LayChuoi(PhoiDulieuTrangHomeDaTachDong[i], "<span title='posts'>(", ")") != "nothing":
-            NumCommentTopicHome.append(LayChuoi(PhoiDulieuTrangHomeDaTachDong[i], "<span title='posts'>(", ")"))
+        if laychuoi(source_linebyline[i],
+                    "<span title='posts'>(", ")") != "nothing":
+            NumTopic.append(
+                laychuoi(source_linebyline[i], "<span title='posts'>(", ")"))
 
         # Trich xuat Users(user tham gia thao luan topic do)
 
         # Trich xuat Views(So luot View)
 
 
-        
-    # for i in range(0,30):
-    #     print NumCommentTopicHome[i]
-
-
-
-    # luu vao tempHome.txt
-    # fileTempHome=open('tempHome.txt','w')
-    # fileTempHome.write(sourcetext(domain))
-    # fileTempHome.close()
-    # Load tung dong du lieu tu temp.txt ra de xu li theo tung dong
-
-# Cap nhat toan bo du lieu cua cac topic, danh cho ket noi tot
-
-
-def updateFullDataHome():
-
-    print SoTopic
-
 # 2.Show du lieu: In Danh sach Topic, In Topic, In Commment, ...
 # ===============================================================
+
 # Ham show ra danh sach topic moi nhat tren trang chu
-
-
 def showhome():
-    if True:
-        for STTTopic in range(0, SoTopic // 2):
-            if STTTopic < 10:
-                print "\n[0" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) + " ["+CategoryTextID[CategoryID[STTTopic]]+"]"
-            else:
-                print "\n[" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) + " ["+CategoryTextID[CategoryID[STTTopic]]+"]"
-        print "\n\n\n  Enter de xem tiep!!!"
-        raw_input()
-        for STTTopic in range(SoTopic//2, SoTopic):
-            if STTTopic < 10:
-                print "\n[0"+str(STTTopic)+"]: " + str(TenTopicHome[STTTopic]) + " ["+CategoryTextID[CategoryID[STTTopic]]+"]"
-            else:
-                print "\n["+str(STTTopic)+"]: " + str(TenTopicHome[STTTopic]) + " ["+CategoryTextID[CategoryID[STTTopic]]+"]"
+    clear_screen()
+    for STTTopic in range(0, SoTopic):
+        if STTTopic < 10:
+            print "\n[0" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) +\
+                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]"
+        else:
+            print "\n[" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) + \
+                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]"
+
+
 # Ham show ra noi dung topic, an enter de chuyen
-
-
-def see(ID):
-    if LinkTopicHomeRaw[ID] == "":
-        updateDataHome()
+def see(ms):
+    clear_screen()
+    if LinkTopicHomeRaw[ms] == "":
+        update_data_home()
     print WaitString
     import urllib2
-    web = urllib2.urlopen(LinkTopicHomeRaw[ID])
+    web = urllib2.urlopen(LinkTopicHomeRaw[ms])
     tep = open('tempDNHpage.txt', "w")
     tep.write(web.read())
     tep.close()
@@ -221,15 +235,23 @@ def see(ID):
     print "\n\n\n"
     print "===================================================="
     print "===================================================="
-    print "===================================================="
+    print "=========        Enter de xem tiep!!      =========="
     print "\n\n\n"
-    print "  "+"["+str(ID)+"]:"+TenTopicHome[ID]
+    print "  " + "[" + str(ms) + "]:" + TenTopicHome[ms]
     print "\n"
+
     for i in range(0, GioiHanDong):
-        textline = tep.readline()
-        if textline != "":
-            print textline
-            raw_input()
+        tempreadline = tep.readline()
+        if tempreadline != "":
+            print tempreadline
+
+            # Thay the do while
+            while True:
+                key = msvcrt.getch()
+                if ord(key) == 13:
+                    break
+            continue
+
     print "\n\n\n"
     print "===================================================="
     print "===================================================="
@@ -237,6 +259,7 @@ def see(ID):
     print "\n\n\n"
     tep.close()
 # Ham show ra TAT CA noi dung topic
+
 
 def showall(link):
     print "\n\n\n"
@@ -251,16 +274,17 @@ def showall(link):
     print "===================================================="
     print "===================================================="
     print "\n\n\n"
-# Ham show ra noi dung comment thu STT cua topic co ma so la ID
 
 
-def seecomment(ID, STT):
-    if str(LinkTopicHomeRaw[int(ID)]) == '':
+# Ham show ra noi dung comment thu stt cua topic co ma so la ms
+def seecomment(ms, stt):
+    if str(LinkTopicHomeRaw[int(ms)]) == '':
         print "Link Trang Home bi trong"
-        updateDataHome()
-    link = LinkTopicHomeRaw[int(ID)]+"/"+str(STT)
+        update_data_home()
+    link = LinkTopicHomeRaw[int(ms)] + "/" + str(stt)
 
     print WaitString
+    clear_screen()
 
     import urllib2
     web = urllib2.urlopen(link)
@@ -283,13 +307,19 @@ def seecomment(ID, STT):
     print "===================================================="
     print "===================================================="
     print "\n\n\n"
-    print "  Comment["+str(STT)+"]:"+"["+str(ID)+"]"+":"+TenTopicHome[int(ID)]
+    print "  Comment[" + str(stt) + "]:" + "[" + str(ms) + "]" + ":" +\
+        TenTopicHome[int(ms)]
     print "\n"
     for i in range(0, GioiHanDong):
-        textline = tep.readline()
-        if textline != "":
-            print textline
-            raw_input()
+        tempreadline = tep.readline()
+        if tempreadline != "":
+            print tempreadline
+            # Thay the do while
+            while True:
+                key = msvcrt.getch()
+                if ord(key) == 13:
+                    break
+            continue
     print "\n\n\n"
     print "===================================================="
     print "===================================================="
