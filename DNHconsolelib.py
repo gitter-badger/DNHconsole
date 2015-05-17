@@ -29,7 +29,6 @@ CategoryTextID = {'1': 'Uncategorized', '3': 'Meta', '5': 'Videos', '6': 'Fun',
                   '23': 'Devchat'}
 
 
-# In nhung dong dau tien ma user nhin thay
 def clear_screen():
     os.system('cls')
 
@@ -39,6 +38,7 @@ def flush_input():
         msvcrt.getch()
 
 
+# In nhung dong dau tien ma user nhin thay
 def help():
     clear_screen()
     print """

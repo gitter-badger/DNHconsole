@@ -135,7 +135,7 @@ while not commander in['x', 'X']:
                 # Bang chon so 2
                 if idtopic in ['x', 'X'] or \
                         idtopic in MangSoTopic:
-                    # Quay lai 
+                    # Quay lai
                     if idtopic == 'x':
                         break
                     elif idtopic.isdigit():
