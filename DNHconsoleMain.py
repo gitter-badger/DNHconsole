@@ -36,11 +36,13 @@ while not commander in['x', 'X']:
         else:
             commander = commander + str(msvcrt.getch())
 
-    # Kiem tra tinh dung dan cua lenh truyen vao
+    # Bang chon so 1
     MangSoTopic = []
     for i in range(0, DNHconsolelib.SoTopic):
         MangSoTopic.append(str(i))
     if commander in ['m', 'i', 'l', 'c', 'h', 'x', 'r'] + MangSoTopic:
+
+        # Chon mau, thoat ra khi an x
         if commander == 'm':
             print "\nGo 1 trong nhung ki tu sau" + \
                   " 1,2,3,4,5,6,7,8,9,a,b,c,d,e,f. Go x de quay lai"
@@ -52,6 +54,8 @@ while not commander in['x', 'X']:
                     DNHconsolelib.clear_screen()
                     break
             continue
+
+        # Chon Topic muon xem
         elif commander in MangSoTopic:
             DNHconsolelib.see(int(commander))
             print " Cho chut :D ...."
@@ -70,10 +74,15 @@ while not commander in['x', 'X']:
                 DNHconsolelib.flush_input()
                 key = msvcrt.getch()
 
+        # Hien lai trang chu
         elif commander == 'h':
             DNHconsolelib.showhome()
+
+        # Hien lai trang gioi thieu
         elif commander == 'i':
             DNHconsolelib.help()
+
+        # Hien Topic moi nhat
         elif commander == 'l':
             DNHconsolelib.showhome()
             commander = 3
@@ -93,10 +102,16 @@ while not commander in['x', 'X']:
                 print '\n Go x de quay lai, Enter de xem tiep'
                 DNHconsolelib.flush_input()
                 key = msvcrt.getch()
+
+        # Thoat
         elif commander == 'x':
             break
+
+        # Xoa man hinh
         elif commander == 'r':
             DNHconsolelib.clear_screen()
+
+        # Xem comment
         elif commander == 'c':
             idtopic = ''
             while idtopic != 'x':
@@ -105,6 +120,8 @@ while not commander in['x', 'X']:
                        " chu y go 2 so lien tiep nhau (VD: 00, 09, 28,..)" +
                        " tuong ung voi topic ban muon xem comment:\n   " +
                        "Go x de quay lai\n")
+
+                # Nhap gia tri vao idtopic
                 while True:
                     idtopic = msvcrt.getch()
                     if ord(idtopic) != 13:
@@ -115,8 +132,10 @@ while not commander in['x', 'X']:
                     else:
                         idtopic = idtopic + str(msvcrt.getch())
 
+                # Bang chon so 2
                 if idtopic in ['x', 'X'] or \
                         idtopic in MangSoTopic:
+                    # Quay lai 
                     if idtopic == 'x':
                         break
                     elif idtopic.isdigit():
@@ -130,6 +149,8 @@ Go so thu tu comment ma ban muon xem
 Go x de quay lai
 """
                             print "Ban muon xem commment nao?: "
+
+                            # Nhap gia tri vao cmdComment
                             while True:
                                 cmdComment = msvcrt.getch()
                                 if ord(cmdComment) != 13:
@@ -143,6 +164,7 @@ Go x de quay lai
                                 else:
                                     cmdComment = 'f'
 
+                            # Bang chon so 3
                             if cmdComment in ['f', 'l', 'x'] or int(cmdComment) in \
                                     range(2, int(DNHconsolelib.NumTopic[
                                         int(idtopic)]) + 1):
