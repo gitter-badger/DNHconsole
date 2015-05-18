@@ -1,8 +1,9 @@
 #DNHconsole - Truy cập Dạy Nhau Học bằng giao diện console
 
 * Đây là chương trình truy cập diễn đàn Daynhauhoc.com bằng giao diện dòng lệnh (console)
-* Được viết băng Python 2.9.7
+* Được viết bằng Python 2.7
 * Thành Phạm - @thanhmssl10
+* OS: Windows 7
 * 11/5/2015
 
 ##1.Sử dụng
