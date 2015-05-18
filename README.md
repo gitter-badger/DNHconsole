@@ -7,15 +7,12 @@
 
 ##1.Sử dụng
 
-Download DNHconsole.exe tại đây, mở ra và làm theo hướng dẫn của chương trình
+Download DNHconsole.exe [tại đây][1], mở ra và làm theo hướng dẫn của chương trình
 
 ##2.Phát triển
 
 ###Hạn chế
 * Chỉ hiển thị được không dấu
-* Format khó theo dõi
-* Một số kí tự  convert từ tiếng việt có dấu sang không dấu thất bại.
-* Chữ của 1 từ khi xuống dòng hay bị tách nhau
 * Không có chức năng login, comment , đăng bài
 
 ###Ý tưởng phát triển thêm
@@ -25,3 +22,4 @@ Download DNHconsole.exe tại đây, mở ra và làm theo hướng dẫn của 
 * Hỗ trợ đăng nhập đăng kí
 * Hỗ trợ comment, đăng bái
 * ...
+[1]:https://app.box.com/s/mqg3nj83p7jlp1o181harwxiqoz72s9q
