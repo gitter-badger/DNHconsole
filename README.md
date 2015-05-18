@@ -21,6 +21,6 @@ Download DNHconsole.exe [tại đây][1], mở ra và làm theo hướng dẫn c
 * Hiển thị tiếng việt có dấu
 * Hiển thị đúng chuẩn Markdown
 * Hỗ trợ đăng nhập đăng kí
-* Hỗ trợ comment, đăng bái
+* Hỗ trợ comment, đăng bài
 * ...
 [1]:https://app.box.com/s/mqg3nj83p7jlp1o181harwxiqoz72s9q
