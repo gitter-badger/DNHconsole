@@ -1,8 +1,14 @@
 # Date first code: 2015/5/11
 # Thanh Pham - @thanhmssl10 - DNH
 # DNHconsole module - Truy cap Daynhauhoc.com qua giao dien console
+
+
+# Dam nhan chuc nang ve mau chu
 import os
+# Dam nhan chuc nang Readkey
 import msvcrt
+# Dam nhan chuc nang wrap chu
+import textwrap
 
 
 domain = 'http://daynhauhoc.com'
@@ -29,10 +35,12 @@ CategoryTextID = {'1': 'Uncategorized', '3': 'Meta', '5': 'Videos', '6': 'Fun',
                   '23': 'Devchat'}
 
 
+# Xoa man hinh
 def clear_screen():
     os.system('cls')
 
 
+# Xoa bo dem, giong fflush(stdin) trong C/C++
 def flush_input():
     while msvcrt.kbhit():
         msvcrt.getch()
@@ -91,7 +99,7 @@ def lay_id_topic(link):
                 vi_tri_ki_tu_bat_dau + dem_so_ki_tu_can_cat]
 
 
-# Ham chuyen doi link thuong dung sang link raw de dang dang lay noi dung topic
+# Ham chuyen doi link thuong dung sang link raw de lay noi dung topic
 def linktoraw(link):
     return domain + "/raw/" + str(lay_id_topic(link))
 
@@ -99,31 +107,16 @@ def linktoraw(link):
 # Ham cho du lieu goc tu mot link bat ki
 def sourcetext(link):
     print WaitString
-
-    # Luu du lieu web vao mot phai temp
     import urllib2
-    web = urllib2.urlopen(link)
-    tep = open('tempDNHpage.txt', "w")
-    tep.write(web.read())
-    tep.close()
-
-    # Chuyen doi chu co dau thanh khong dau de cmd hien thi de dang
-    import unicodedata
-    input = open('tempDNHpage.txt').read().decode('UTF-8')
-    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
-
-    # Ghi lai du lieu da chuyen doi vao file temp
-    tep = open('tempDNHpage.txt', "w")
-    tep.write(output)
-    tep.close()
+    output = urllib2.urlopen(link).read()
     return output
 
 
 # Cap nhat mot so thong tin cua cac topic
 def update_data_home():
     # Dung sourcetext de lay du lieu tu trang chu
-    # Tach dong tu du lieu cua sourcetext dua vao mang
-    source_linebyline = sourcetext(domain).splitlines()
+    # Tach dong tu du lieu cua sourcetext, chuyen tu unicode sang ascii
+    source_linebyline = convert_unicode_2_ascii(sourcetext(domain)).splitlines()
     # Trich xuat du lieu cua moi topic, gan ID cho moi topic
     # Duyet tung dong cua Phoi Du Lieu
     for i in range(0, source_linebyline.__len__()):
@@ -204,11 +197,11 @@ def showhome():
     clear_screen()
     for STTTopic in range(0, SoTopic):
         if STTTopic < 10:
-            print "\n[0" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) +\
-                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]"
+            print textwrap.fill("\n[0" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) +
+                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]", 90) + '\n'
         else:
-            print "\n[" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) + \
-                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]"
+            print textwrap.fill("\n[" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) + 
+                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]", 90) + '\n'
 
 
 # Ham show ra noi dung topic, an enter de chuyen
@@ -216,35 +209,24 @@ def see(ms):
     clear_screen()
     if LinkTopicHomeRaw[ms] == "":
         update_data_home()
-    print WaitString
-    import urllib2
-    web = urllib2.urlopen(LinkTopicHomeRaw[ms])
-    tep = open('tempDNHpage.txt', "w")
-    tep.write(web.read())
-    tep.close()
 
-    import unicodedata
-    input = open('tempDNHpage.txt').read().decode('UTF-8')
-    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
-
-    tep = open('tempDNHpage.txt', "w")
-    tep.write(output)
-    tep.close()
-    tep = open('tempDNHpage.txt', "r")
+    # Tach du lieu trang can xem vao mang
+    source_linebyline = convert_unicode_2_ascii(sourcetext(LinkTopicHomeRaw[ms])).splitlines()
 
     print "\n\n\n"
     print "===================================================="
     print "===================================================="
     print "=========        Enter de xem tiep!!      =========="
     print "\n\n\n"
-    print "  " + "[" + str(ms) + "]:" + TenTopicHome[ms]
+    print textwrap.fill("    " + "[" + str(ms) + "]:" + TenTopicHome[ms])
     print "\n"
 
-    for i in range(0, GioiHanDong):
-        tempreadline = tep.readline()
-        if tempreadline != "":
-            print tempreadline
-
+    for i in range(0, source_linebyline.__len__()):
+       if source_linebyline[i] != "":
+            print '\n' 
+            # Wrap lai, xong in tung dong de can chinh le trai
+            for element in textwrap.wrap(source_linebyline[i], 75):
+                print "  " + element
             # Thay the do while
             while True:
                 key = msvcrt.getch()
@@ -252,23 +234,6 @@ def see(ms):
                     break
             continue
 
-    print "\n\n\n"
-    print "===================================================="
-    print "===================================================="
-    print "===================================================="
-    print "\n\n\n"
-    tep.close()
-# Ham show ra TAT CA noi dung topic
-
-
-def showall(link):
-    print "\n\n\n"
-    print "===================================================="
-    print "===================================================="
-    print "===================================================="
-    print "\n\n\n"
-    print "\n"
-    print sourcetext(link)
     print "\n\n\n"
     print "===================================================="
     print "===================================================="
@@ -278,29 +243,7 @@ def showall(link):
 
 # Ham show ra noi dung comment thu stt cua topic co ma so la ms
 def seecomment(ms, stt):
-    if str(LinkTopicHomeRaw[int(ms)]) == '':
-        print "Link Trang Home bi trong"
-        update_data_home()
-    link = LinkTopicHomeRaw[int(ms)] + "/" + str(stt)
-
-    print WaitString
-    clear_screen()
-
-    import urllib2
-    web = urllib2.urlopen(link)
-    tep = open('tempDNHpage.txt', "w")
-    tep.write(web.read())
-    tep.close()
-
-    import unicodedata
-    input = open('tempDNHpage.txt').read().decode('UTF-8')
-    output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
-
-    tep = open('tempDNHpage.txt', "w")
-    tep.write(output)
-    tep.close()
-
-    tep = open('tempDNHpage.txt', "r")
+    source_linebyline = convert_unicode_2_ascii(sourcetext(LinkTopicHomeRaw[int(ms)] + "/" + str(stt))).splitlines()
 
     print "\n\n\n"
     print "===================================================="
@@ -310,10 +253,11 @@ def seecomment(ms, stt):
     print "  Comment[" + str(stt) + "]:" + "[" + str(ms) + "]" + ":" +\
         TenTopicHome[int(ms)]
     print "\n"
-    for i in range(0, GioiHanDong):
-        tempreadline = tep.readline()
-        if tempreadline != "":
-            print tempreadline
+    for i in range(0, source_linebyline.__len__()):
+        if source_linebyline[i] != "":
+            # Wrap lai, xong in tung dong de can chinh le trai
+            for element in textwrap.wrap(source_linebyline[i], 75):
+                print "  " + element
             # Thay the do while
             while True:
                 key = msvcrt.getch()
@@ -325,4 +269,28 @@ def seecomment(ms, stt):
     print "===================================================="
     print "===================================================="
     print "\n\n\n"
-    tep.close()
+
+
+# Test unicode
+def convert_unicode_2_ascii(text_unicode):
+    # Chuyen doi chu co dau thanh khong dau de cmd hien thi de dang, Unicode to Ascii
+    import unicodedata
+    input = text_unicode.decode('UTF-8')
+    # output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
+
+    f = open('unicode_convert_database.txt')
+    # Load dong thu nhat vao mang 1, dong thu nhat chua cac ki tu co dang unicode
+    Unicode_database_line1 = f.readline().decode('UTF-8')
+    # Load dong thu 2 vao mang 2, dong thu hai chua cac ki tu co dang ascii
+    Unicode_database_line2 = f.readline()
+
+    text_ascii = ''
+    for i in range(0, len(input)):
+        for j in range(0, len(Unicode_database_line1)):
+            if Unicode_database_line1[j] == input[i] and input[i] != ' ':
+                text_ascii += Unicode_database_line2[j]
+                break
+            elif j == len(Unicode_database_line1) - 1:
+                text_ascii += input[i].encode('UTF-8')
+
+    return text_ascii

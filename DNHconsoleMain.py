@@ -67,12 +67,40 @@ while not commander in['x', 'X']:
                 if ord(key) != 13:
                     break
                 DNHconsolelib.clear_screen()
-                DNHconsolelib.seecomment(commander, i)
-                print " Cho chut :D ...."
-                time.sleep(2)
-                print '\n Go x de quay lai, Enter de xem tiep'
-                DNHconsolelib.flush_input()
-                key = msvcrt.getch()
+
+                # Bat loi khi commment bi dut doan
+                # Co gang tim them comment cho du so luong
+                try:
+                    DNHconsolelib.seecomment(commander, i)
+                    print " Cho chut :D ...."
+                    time.sleep(2)
+                    print '\n Go x de quay lai, Enter de xem tiep'
+                    DNHconsolelib.flush_input()
+                    key = msvcrt.getch()
+
+                except Exception, e:
+                    demsolanfixthanhcong = 0
+                    for xulicommentloi in range(1, 100):
+                        try:
+                            DNHconsolelib.clear_screen()
+                            DNHconsolelib.seecomment(commander,
+                                                     i + xulicommentloi)
+                            print " Cho chut :D ...."
+                            time.sleep(2)
+                            print '\n Go x de quay lai, Enter de xem tiep'
+                            DNHconsolelib.flush_input()
+                            if msvcrt.getch() == 'x':
+                                break
+                        except Exception, e:
+                            continue
+                        else:
+                            demsolanfixthanhcong += 1
+                            # Khi so lan fix thanh cong lon hon
+                            # So comment ban dau Thi dung vong lap
+                            if demsolanfixthanhcong > (int(
+                                    DNHconsolelib.NumTopic[int(commander)]) - i
+                            ):
+                                break
 
         # Hien lai trang chu
         elif commander == 'h':
@@ -164,7 +192,7 @@ Go x de quay lai
                                 else:
                                     cmdComment = 'f'
 
-                            # Bang chon so 3
+                            # Kiem tra gia tri cho cmdComment, roi thi hanh lenh
                             if cmdComment in ['f', 'l', 'x'] or int(cmdComment) in \
                                     range(2, int(DNHconsolelib.NumTopic[
                                         int(idtopic)]) + 1):
