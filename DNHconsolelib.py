@@ -50,8 +50,17 @@ def flush_input():
 def help():
     clear_screen()
     print """
+    #Gioi thieu ve DNHconsole
 
-    #Gioi thieu chung cac chuc nang cua DNHconsole """
+    DNHconsole la ung dung truy cap dien dan Day Nhau Hoc qua giao dien console
+    Tac gia: Thanh Pham - @thanhmssl10 - DNH -  Lien he: thanhmssl10@gmail.com
+    First code: 11/5/2015
+    Ngon ngu: Python 2.7
+    OS: Windows 7
+    Beta1: 18/5/2015
+
+
+    """
 
 
 # 1.Lay du lieu cua cac topic nhu: Ten topic, link thuong dung,
@@ -293,4 +302,5 @@ def convert_unicode_2_ascii(text_unicode):
             elif j == len(Unicode_database_line1) - 1:
                 text_ascii += input[i].encode('UTF-8')
 
-    return text_ascii
+    return text_asci
+    

@@ -3,6 +3,7 @@ import os
 import msvcrt
 import time
 # Cap nhat du lieu lan dau tien, lay cac thong so can thiet
+
 DNHconsolelib.update_data_home()
 # Show ra gioi thieu ve DNHconsole
 DNHconsolelib.help()
@@ -214,3 +215,4 @@ Go x de quay lai
                                             int(idtopic)]) + 1):
                                     DNHconsolelib.seecomment(
                                         int(idtopic), cmdComment)
+
