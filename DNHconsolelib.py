@@ -302,5 +302,5 @@ def convert_unicode_2_ascii(text_unicode):
             elif j == len(Unicode_database_line1) - 1:
                 text_ascii += input[i].encode('UTF-8')
 
-    return text_asci
+    return text_ascii
     
