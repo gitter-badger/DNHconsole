@@ -36,6 +36,13 @@ CategoryTextID = {'1': 'Uncategorized', '3': 'Meta', '5': 'Videos', '6': 'Fun',
                   '23': 'Devchat', '35': 'RandomQ'}
 
 
+# Khoi tao file log
+file_log_name = "log.txt"
+file_log = open(file_log_name, 'w')
+file_log.write("")
+file_log.close()
+
+
 # Xoa man hinh
 def clear_screen():
     os.system('cls')
@@ -72,8 +79,7 @@ def help():
 
 # Ham ho tro viec boc tach du lieu
 # Ham tach du lieu ra khoi mot chuoi co day dinh vi la ki tu ket thuc
-def laychuoi(daygoc, daydinhvi, kituketthuc):
-
+def lay_chuoi_xuoi(daygoc, daydinhvi, kituketthuc):
     vi_tri_day_dinh_vi = daygoc.find(daydinhvi)
     vi_tri_cua_ki_tu_ket_thuc = 0
     if vi_tri_day_dinh_vi > 0:
@@ -84,6 +90,25 @@ def laychuoi(daygoc, daydinhvi, kituketthuc):
     if vi_tri_cua_ki_tu_ket_thuc > 0:
         dayoutput = daygoc[
             (vi_tri_day_dinh_vi + len(daydinhvi)):vi_tri_cua_ki_tu_ket_thuc]
+
+    if dayoutput != "":
+        return dayoutput
+    else:
+        # Khong tach duoc thi xuat "nothing"
+        return "nothing"
+
+
+def lay_chuoi_nguoc(daygoc, daydinhvi, kituketthuc):
+    vi_tri_day_dinh_vi = daygoc.find(daydinhvi)
+    vi_tri_cua_ki_tu_ket_thuc = 0
+    if vi_tri_day_dinh_vi > 0:
+        vi_tri_cua_ki_tu_ket_thuc = daygoc.find(
+            kituketthuc, (vi_tri_day_dinh_vi - 6))
+
+    dayoutput = ""
+    if vi_tri_cua_ki_tu_ket_thuc > 0:
+        dayoutput = daygoc[vi_tri_cua_ki_tu_ket_thuc + 1 : vi_tri_day_dinh_vi]
+
 
     if dayoutput != "":
         return dayoutput
@@ -135,10 +160,10 @@ def update_data_home():
         # Trich xuat Ten topic
 
         # Dung ham lay chuoi de tach du lieu theo tung dong
-        if laychuoi(source_linebyline[i],
+        if lay_chuoi_xuoi(source_linebyline[i],
                     "<span itemprop='name'>", "<") != "nothing":
             TenTopicHome.append(
-                laychuoi(source_linebyline[i], "<span itemprop='name'>", "<"))
+                lay_chuoi_xuoi(source_linebyline[i], "<span itemprop='name'>", "<"))
 
         # Trich xuat so topic
         if (i == source_linebyline.__len__() - 1):
@@ -146,15 +171,15 @@ def update_data_home():
             SoTopic = TenTopicHome.__len__()
 
         # Trich xuat ID topic
-        if laychuoi(source_linebyline[i],
+        if lay_chuoi_xuoi(source_linebyline[i],
                     "<meta itemprop='url' content='", "'") != "nothing":
-            IDTopicHomeRaw.append(lay_id_topic(laychuoi(
+            IDTopicHomeRaw.append(lay_id_topic(lay_chuoi_xuoi(
                 source_linebyline[i], "<meta itemprop='url' content='", "'")))
 
         # Trich xuat Link toptic (sau do tach ra Link raw)
-        if laychuoi(source_linebyline[i],
+        if lay_chuoi_xuoi(source_linebyline[i],
                     "<meta itemprop='url' content='", "'") != "nothing":
-            LinkTopicHomeRaw.append(linktoraw(laychuoi(
+            LinkTopicHomeRaw.append(linktoraw(lay_chuoi_xuoi(
                 source_linebyline[i], "<meta itemprop='url' content='", "'")))
 
     # Duyet lai tung dong cua Phoi Du Lieu de trich xuat cac du lieu con lai
@@ -191,16 +216,16 @@ def update_data_home():
                     CategoryID.append(category_id)
 
         # Trich xuat Replies (So comment)
-        if laychuoi(source_linebyline[i],
-                    "<span title='posts'>(", ")") != "nothing":
-            NumTopic.append(
-                laychuoi(source_linebyline[i], "<span title='posts'>(", ")"))
+        num_topic_temp = lay_chuoi_nguoc(source_linebyline[i], "</a>)</span>", ">") 
+        if num_topic_temp != "nothing":
+            NumTopic.append(num_topic_temp)
+
 
         # Trich xuat Users(user tham gia thao luan topic do)
 
         # Trich xuat Views(So luot View)
 
-
+        
 # 2.Show du lieu: In Danh sach Topic, In Topic, In Commment, ...
 # ===============================================================
 
@@ -314,3 +339,10 @@ def convert_unicode_2_ascii(text_unicode):
 
     return text_ascii
     
+# Ghi ra file log
+def log(text):
+    file_log = open(file_log_name, 'r+')
+    num_lines = sum(1 for line in file_log)
+    file_log.write(str(num_lines + 1) + " : " + text)
+    file_log.write('\n')
+    file_log.close()
