@@ -23,4 +23,4 @@ Download DNHconsole.exe [tại đây][1], mở ra và làm theo hướng dẫn c
 * Hỗ trợ đăng nhập đăng kí
 * Hỗ trợ comment, đăng bài
 * ...
-[1]:https://app.box.com/s/mqg3nj83p7jlp1o181harwxiqoz72s9q
+[1]:https://app.box.com/s/uwvzs3p5abbei6malpccpq2lzypntz1f
