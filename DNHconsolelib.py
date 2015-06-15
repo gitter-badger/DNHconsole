@@ -11,6 +11,7 @@ import msvcrt
 import textwrap
 
 
+
 domain = 'http://daynhauhoc.com'
 # Thoi gian thuc hien nhung cau lenh lay du lieu kha lau nen phai co WaitString
 WaitString = "\nCho chut nhe :D ......"
@@ -32,7 +33,7 @@ CategoryTextID = {'1': 'Uncategorized', '3': 'Meta', '5': 'Videos', '6': 'Fun',
                   '7': 'HackerNews', '9': 'Programming', '20': 'English',
                   '29': 'Unix-Linux', '34': 'Windows', '32': 'Share',
                   '33': 'Computer', '31': 'Writes', '21': 'Jobs',
-                  '23': 'Devchat'}
+                  '23': 'Devchat', '35': 'RandomQ'}
 
 
 # Xoa man hinh
@@ -126,6 +127,8 @@ def update_data_home():
     # Dung sourcetext de lay du lieu tu trang chu
     # Tach dong tu du lieu cua sourcetext, chuyen tu unicode sang ascii
     source_linebyline = convert_unicode_2_ascii(sourcetext(domain)).splitlines()
+
+  
     # Trich xuat du lieu cua moi topic, gan ID cho moi topic
     # Duyet tung dong cua Phoi Du Lieu
     for i in range(0, source_linebyline.__len__()):
@@ -205,12 +208,19 @@ def update_data_home():
 def showhome():
     clear_screen()
     for STTTopic in range(0, SoTopic):
+
+        if CategoryID[STTTopic] in CategoryTextID.keys():
+            t = CategoryTextID[CategoryID[STTTopic]]
+        else:
+            t = "Error_Unknown_Category_code_" + str(CategoryID[STTTopic])
+
         if STTTopic < 10:
             print textwrap.fill("\n[0" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) +
-                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]", 90) + '\n'
+                  " [" + t + "]", 90) + '\n'
         else:
             print textwrap.fill("\n[" + str(STTTopic) + "]: " + str(TenTopicHome[STTTopic]) + 
-                  " [" + CategoryTextID[CategoryID[STTTopic]] + "]", 90) + '\n'
+                  " [" + t + "]", 90) + '\n'
+
 
 
 # Ham show ra noi dung topic, an enter de chuyen
