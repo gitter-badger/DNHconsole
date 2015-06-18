@@ -320,7 +320,6 @@ def convert_unicode_2_ascii(text_unicode):
     # Chuyen doi chu co dau thanh khong dau de cmd hien thi de dang, Unicode to Ascii
     import unicodedata
     input = text_unicode.decode('UTF-8')
-    # output = unicodedata.normalize('NFKD', input).encode('ASCII', 'ignore')
 
     f = open('unicode_convert_database.txt')
     # Load dong thu nhat vao mang 1, dong thu nhat chua cac ki tu co dang unicode
