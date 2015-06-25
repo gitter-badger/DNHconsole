@@ -1,5 +1,7 @@
 #DNHconsole - Truy cập Dạy Nhau Học bằng giao diện console
 
+[![Join the chat at https://gitter.im/thanhmssl10/DNHconsole](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thanhmssl10/DNHconsole?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 * Đây là chương trình truy cập diễn đàn Daynhauhoc.com bằng giao diện dòng lệnh (console)
 * Được viết bằng Python 2.7
 * Thành Phạm - @thanhmssl10
